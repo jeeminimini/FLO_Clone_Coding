@@ -28,8 +28,8 @@ class SongFragment : Fragment(){
 
     fun setPlayerStatus(isChecking : Boolean){
         if(isChecking){
-            binding.songMixonTg.visibility = View.VISIBLE
-            binding.songMixoffTg.visibility = View.GONE
+            binding.songMixoffTg.visibility = View.VISIBLE
+            binding.songMixonTg.visibility = View.GONE
 
         }else{ //처음이 false이다.
             binding.songMixoffTg.visibility = View.GONE

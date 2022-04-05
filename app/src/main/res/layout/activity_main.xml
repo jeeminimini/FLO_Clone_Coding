@@ -10,7 +10,6 @@
         android:id="@+id/main_frm"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-
         app:layout_constraintBottom_toTopOf="@id/main_player_cl"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,7 +22,21 @@
         android:paddingVertical="5dp"
         android:background="#F9F9F9">
 
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/main_progress_sb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:progressBackgroundTint="@color/gray_color"
+            android:progressTint="#3f3fff"
+            android:thumb="@color/transparent"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
         <LinearLayout
+            android:id="@+id/main_miniplayer_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
