@@ -1,6 +1,10 @@
 package com.example.flo
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +15,13 @@ import com.example.flo.databinding.FragmentHomeBinding
 class HomeFragment : Fragment() {
 
     lateinit var binding: FragmentHomeBinding
+    private var currentPosition_panel = Int.MAX_VALUE/3
+    private var currentPosition_banner = 0
+    val handler=Handler(Looper.getMainLooper()){
+        setPage()
+        true
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,9 +37,10 @@ class HomeFragment : Fragment() {
         val panelAdapter = PanelVPAdapter(this)
         binding.homePanelVp.adapter = panelAdapter
         binding.homePanelVp.orientation=ViewPager2.ORIENTATION_HORIZONTAL
+        binding.homePanelVp.setCurrentItem(currentPosition_panel,false) //현재 위치를 지정
         binding.homePanelVp.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
             override fun onPageSelected(position: Int) {
-                binding.homeCi.selectDot(position)
+                binding.homeCi.selectDot(position%3)
             }
         })
 
@@ -40,6 +52,27 @@ class HomeFragment : Fragment() {
         binding.homeBannerVp.adapter = bannerAdapter
         binding.homeBannerVp.orientation = ViewPager2.ORIENTATION_HORIZONTAL //뷰페이저가 좌우로 스크롤 될 수 있도록 하는 것.
 
+        val thread = Thread(PagerRunnable())
+        thread.start()
+
         return binding.root
     }
+
+    fun setPage(){
+        Log.d("home","position: ${currentPosition_banner}")
+        if(currentPosition_banner==2) currentPosition_banner=0
+        binding.homeBannerVp.setCurrentItem(currentPosition_banner,true)
+        currentPosition_banner+=1
+    }
+
+    //2초마다 페이지 넘기기
+    inner class PagerRunnable:Runnable{
+        override fun run() {
+            while (true){
+                Thread.sleep(2000)
+                handler.sendEmptyMessage(0)
+            }
+        }
+    }
+
 }

@@ -45,9 +45,18 @@ class SongActivity : AppCompatActivity() {
                     intent.getStringExtra("singer")!!,
                     intent.getIntExtra("second",0),
                     intent.getIntExtra("playTime",0),
+                    intent.getIntExtra("playingSecond",0),
+                    intent.getFloatExtra("playingMills",0f),
                     intent.getBooleanExtra("isPlaying",false),
 
                     )
+            Log.d("song","title : ${song.title}\n" +
+                    "singer : ${song.singer}\n" +
+                    "second : ${song.second}\n" +
+                    "playTime : ${song.playTime}\n" +
+                    "playingSecond : ${song.playingSecond}\n"+
+                    "playingMills : ${song.playingMills}\n"+
+                    "isPlaying : ${song.isPlaying}\n")
         }
         startTimer()
     }
@@ -55,9 +64,9 @@ class SongActivity : AppCompatActivity() {
     private fun setPlayer(song: Song){
         binding.songMusicTitleTv.text=intent.getStringExtra("title")!!
         binding.songMusicSingerTv.text=intent.getStringExtra("singer")!!
-        binding.songStartTimeTv.text=String.format("%02d:%02d",song.second/60, song.second % 60)
+        binding.songStartTimeTv.text=String.format("%02d:%02d",song.playingSecond/60, song.playingSecond % 60)
         binding.songEndTimeTv.text=String.format("%02d:%02d",song.playTime/60, song.playTime % 60)
-        binding.songProgressSb.progress=(song.second*1000/song.playTime)
+        binding.songProgressSb.progress=(song.playingSecond*1000/song.playTime)
 
         setPlayerStatus(song.isPlaying)
 
@@ -84,8 +93,8 @@ class SongActivity : AppCompatActivity() {
 
     inner class Timer(private val playTime: Int, var isPlaying: Boolean = true):Thread(){
 
-        private var second : Int = 0
-        private var mills: Float = 0f
+        private var second : Int = song.playingSecond
+        private var mills: Float = song.playingMills
 
         override fun run() {
             super.run()
@@ -99,6 +108,7 @@ class SongActivity : AppCompatActivity() {
                         mills += 50
                         runOnUiThread{
                             binding.songProgressSb.progress = ((mills/playTime)*100).toInt()
+                            Log.d("song seekbar","재생중 ${((mills/playTime)*100).toInt()}")
                         }
                         if(mills % 1000 == 0f){
                             runOnUiThread {

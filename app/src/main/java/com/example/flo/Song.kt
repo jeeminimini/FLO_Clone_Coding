@@ -7,6 +7,8 @@ data class Song(
         val singer : String ="",
         var second: Int=0,
         var playTime: Int=0,
+        var playingSecond: Int=0,
+        var playingMills: Float=0f,
         var isPlaying: Boolean = false
 
 )
