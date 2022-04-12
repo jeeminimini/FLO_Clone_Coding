@@ -6,23 +6,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.example.flo.databinding.ActivityMainBinding
+import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
-    lateinit var song : Song
-    lateinit var timer: Timer
+    private var song : Song=Song()
+    private var gson : Gson= Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_FLO)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        song = Song(binding.mainMiniplayerTitleTv.text.toString(), binding.mainMiniplayerSingerTv.text.toString(),0,60,0,0f,false)
-        timer=Timer(song.playTime,song.isPlaying)
-        timer.start()
-        setPlayer(song)
 
         binding.mainMiniplayerBtn.setOnClickListener {
             setPlayerStatus(true)
@@ -38,9 +34,8 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("singer",song.singer)
             intent.putExtra("second",song.second)
             intent.putExtra("playTime",song.playTime)
-            intent.putExtra("playingSecond",song.playingSecond)
-            intent.putExtra("playingMills",song.playingMills)
             intent.putExtra("isPlaying",song.isPlaying)
+            intent.putExtra("music",song.music)
             startActivity(intent)
         }
 
@@ -52,9 +47,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setPlayerStatus(isPlaying: Boolean){
-        song.isPlaying = isPlaying
-        timer.isPlaying = isPlaying
-
         if(isPlaying){
             binding.mainMiniplayerBtn.visibility= View.GONE
             binding.mainPauseBtn.visibility= View.VISIBLE
@@ -63,46 +55,6 @@ class MainActivity : AppCompatActivity() {
             binding.mainMiniplayerBtn.visibility= View.VISIBLE
         }
 
-    }
-
-    private fun setPlayer(song:Song){
-        binding.mainProgressSb.progress=(song.playingSecond*1000/song.playTime) //이게 뭘까..
-        Log.d("main","setPlayer 함수 progress: ${song.playingSecond*1000/song.playTime}")
-    }
-
-    inner class Timer(private val playTime: Int, var isPlaying: Boolean = true):Thread(){
-
-        private var second : Int = 0
-        private var mills: Float = 0f
-
-        override fun run() {
-            super.run()
-            try {
-                while (true){
-                    if(second >= playTime){
-                        break
-                    }
-                    if(isPlaying){
-                        sleep(50) //진행되는 시간 관리를 위해
-                        mills += 50
-                        runOnUiThread{
-                            binding.mainProgressSb.progress = ((mills/playTime)*100).toInt()
-                            song.playingMills = mills
-                            Log.d("main seekbar","재생중 ${((mills/playTime)*100).toInt()}")
-                        }
-                        if(mills % 1000 == 0f){
-                            runOnUiThread {
-                                song.playingSecond=second
-                            }
-                            second++
-                        }
-                    }
-                }
-            }catch (e: InterruptedException){
-                Log.d("main","쓰레드가 죽었습니다. ${e.message}")
-            }
-
-        }
     }
 
     private fun initBottomNavigation(){
@@ -142,5 +94,27 @@ class MainActivity : AppCompatActivity() {
             }
             false
         }
+    }
+
+    private fun setMiniPlayer(song: Song){
+        binding.mainMiniplayerTitleTv.text = song.title
+        binding.mainMiniplayerTitleTv.text = song.singer
+        binding.mainProgressSb.progress = (song.second*100000)/song.playTime
+    }
+
+    override fun onStart() { //onCreate가 아닌 onStart부터 하는 이유는 엑티비티가 전환이 될 때 onStart부터 시작되기 때문이다.
+        //onResume에서 해도 되지만, onStart에서 ui와 관련한 코드를 초기화하는게 더 안정적이다.
+        super.onStart()
+        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
+        val songJson = sharedPreferences.getString("songData",null)
+
+        song = if(songJson==null){
+            Song("라일락","아이유(IU)",0,60,false,"music_lilac")
+        }else{
+            gson.fromJson(songJson,Song::class.java)
+        }
+
+        setMiniPlayer(song)
+
     }
 }
