@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.SeekBar
 import com.example.flo.databinding.ActivitySongBinding
 import com.google.gson.Gson
 
@@ -15,12 +16,14 @@ class SongActivity : AppCompatActivity() {
     lateinit var timer: Timer
     private var mediaPlayer : MediaPlayer? = null // ?는 null 값이 들어올 수 있음. 엑티비티가 소멸될 때 mediaplayer를 해제시켜줘야하기 때문에 nullable로 해줬다.
     private var gson : Gson= Gson()
+    var pos : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivitySongBinding.inflate(layoutInflater) // 바인딩 초기화
-        setContentView(binding.root)
+        //inflater는 xml에 표기된 레이아웃들을 메모리에 객체화 시키는 행동으로 이해
+        setContentView(binding.root)// ctrl + 'root'click 하면 activity_song.xml로 이동
 
         initSong()
         setPlayer(song)
@@ -34,6 +37,59 @@ class SongActivity : AppCompatActivity() {
         binding.songPauseIv.setOnClickListener {
             setPlayerStatus(false)
         }
+
+        // 4주차 챌린지 과제 반복 재생 이미지 변경 *******************************************
+        var repeat:Boolean=false
+        binding.songPlaylistRepeatOnIb.setOnClickListener {
+            if(!repeat){
+                binding.songPlaylistRepeatOnIb.setImageResource(R.drawable.btn_playlist_repeat_on)// 이미지가 없어서 일단 이걸로
+            }
+            else{
+                binding.songPlaylistRepeatOnIb.setImageResource(R.drawable.nugu_btn_repeat_inactive)
+            }
+            repeat=!repeat
+        }
+        var random:Boolean=true
+        binding.songPlaylistRandomOnIb.setOnClickListener {
+            if(!random){
+                binding.songPlaylistRandomOnIb.setImageResource(R.drawable.btn_playlist_random_on)
+            }
+            else{
+                binding.songPlaylistRandomOnIb.setImageResource(R.drawable.nugu_btn_random_inactive)
+            }
+            random=!random
+        }
+        // 여기까지 *****************************************************************
+    /* onCreate는 AppCompatActivity라는 클래스 안에 있는 함수를 오버라이딩 */
+
+
+
+       /* //이거는 5주차 챌린지하던거
+        binding.songProgressSb.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                //binding.songStartTimeTv.text = String.format("onProgressChanged p1 : $p1")
+                Log.d("song","p1 입니다 : $p1")
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+                binding.songStartTimeTv.text = String.format("onStartTrackingTouch")
+                Log.d("song","onStartTrackingTouch")
+
+            }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+                song.isPlaying=true
+                var ttt = p0?.getProgress()
+                mediaPlayer?.seekTo(ttt!!)
+                mediaPlayer?.start()
+                binding.songStartTimeTv.text = String.format("onStopTrackingTouch")
+//                timer.start()
+                Log.d("song","onStopTrackingTouch")
+
+            }
+
+        })*/
+
 
     }
 
@@ -83,11 +139,13 @@ class SongActivity : AppCompatActivity() {
         if(isPlaying){
             binding.songMiniplayerIv.visibility = View.GONE //재생버튼은 보이게
             binding.songPauseIv.visibility = View.VISIBLE //정지버튼은 보이지 않게
+            mediaPlayer?.seekTo(pos)
             mediaPlayer?.start()
 
         }else{ //처음이 false이다.
             binding.songMiniplayerIv.visibility = View.VISIBLE //재생버튼은 보이지 않게
             binding.songPauseIv.visibility = View.GONE //정지버튼은 보이게
+            pos = mediaPlayer?.currentPosition!!
             if(mediaPlayer?.isPlaying==true){ //mediaPlayer는 재생중이 아닐 때 pasue를 하면 오류가 생길 수 있으므로 if문을 사용했다.
                 mediaPlayer?.pause()
             }
@@ -111,7 +169,7 @@ class SongActivity : AppCompatActivity() {
                         mills += 50
                         runOnUiThread{
                             binding.songProgressSb.progress = ((mills/playTime)*100).toInt()
-                            Log.d("song seekbar","재생중 ${((mills/playTime)*100).toInt()}")
+                            Log.d("song seekbar","재생중 ${((mills/playTime)*100).toInt()}, 미디어플레이어 currentposition ${mediaPlayer?.currentPosition}")
                         }
                         if(mills % 1000 == 0f){
                             runOnUiThread {
@@ -119,6 +177,7 @@ class SongActivity : AppCompatActivity() {
                             }
                             second++
                         }
+//                        binding.songProgressSb.setProgress(mediaPlayer?.currentPosition!!)
                     }
                 }
             }catch (e: InterruptedException){

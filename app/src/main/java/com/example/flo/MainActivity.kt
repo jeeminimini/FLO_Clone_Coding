@@ -1,6 +1,7 @@
 package com.example.flo
 
 import android.content.Intent
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -14,8 +15,12 @@ class MainActivity : AppCompatActivity() {
     private var song : Song=Song()
     private var gson : Gson= Gson()
 
+    private var mediaPlayer: MediaPlayer?=null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 처음 실행땐 R.style.SplashTheme가 먼저 실행되나 메인 액티비티가 onCreate될 땐 다시 메인 테마로 돌아와야 하기 때문에 작성해줌
         setTheme(R.style.Theme_FLO)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -39,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
         initBottomNavigation()
 
 
@@ -47,12 +53,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setPlayerStatus(isPlaying: Boolean){
+        song.isPlaying = isPlaying
         if(isPlaying){
             binding.mainMiniplayerBtn.visibility= View.GONE
             binding.mainPauseBtn.visibility= View.VISIBLE
+            mediaPlayer?.start()
         }else{
             binding.mainPauseBtn.visibility= View.GONE
             binding.mainMiniplayerBtn.visibility= View.VISIBLE
+            if(mediaPlayer?.isPlaying==true){
+                mediaPlayer?.pause()
+            }
         }
 
     }
@@ -100,6 +111,12 @@ class MainActivity : AppCompatActivity() {
         binding.mainMiniplayerTitleTv.text = song.title
         binding.mainMiniplayerTitleTv.text = song.singer
         binding.mainProgressSb.progress = (song.second*100000)/song.playTime
+
+
+        //챌린지 과제
+        val music = resources.getIdentifier(song.music,"raw",this.packageName)
+        mediaPlayer=MediaPlayer.create(this,music) //mediaPlayer에 이 음악 재생할 것임을 알려줌.
+        //여기까지
     }
 
     override fun onStart() { //onCreate가 아닌 onStart부터 하는 이유는 엑티비티가 전환이 될 때 onStart부터 시작되기 때문이다.
@@ -117,4 +134,12 @@ class MainActivity : AppCompatActivity() {
         setMiniPlayer(song)
 
     }
+
+    //챌린지 과제
+    override fun onPause() {
+        super.onPause()
+        setPlayerStatus(false) //음악 재생 종료
+        Log.d("onPause","miniPlayer 실행 도중 앱이 포커스를 잃음") //Log 출력
+    }
+    //여기까지
 }
