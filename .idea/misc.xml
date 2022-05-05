@@ -12,10 +12,12 @@
         <entry key="..\:/Users/jungwoo/AndroidStudioProjects/FLO/app/src/main/res/layout/fragment_look.xml" value="0.1" />
         <entry key="..\:/Users/jungwoo/AndroidStudioProjects/FLO/app/src/main/res/layout/fragment_search.xml" value="0.1" />
         <entry key="..\:/Users/jungwoo/AndroidStudioProjects/FLO/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
+        <entry key="..\:/Users/tydragon65/AndroidStudioProjects/Kotlin/udemy_android_template_bottomnavi-main/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/tydragon65/AndroidStudioProjects/Kotlin/udemy_android_template_bottomnavi-main/app/src/main/res/layout/activity_song.xml" value="0.17572463768115942" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

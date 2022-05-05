@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
+        inputDummySongs()
         initBottomNavigation()
 
 
@@ -117,6 +117,76 @@ class MainActivity : AppCompatActivity() {
         val music = resources.getIdentifier(song.music,"raw",this.packageName)
         mediaPlayer=MediaPlayer.create(this,music) //mediaPlayer에 이 음악 재생할 것임을 알려줌.
         //여기까지
+    }
+
+    private fun inputDummySongs(){
+        val songDB = SongDatabase.getInstance(this)!!
+        val songs = songDB.songDao().getSongs()
+
+        if (songs.isNotEmpty()) return
+
+        songDB.songDao().insert(
+            Song(
+                "Lilac",
+            "아이유 (IU)",
+                0,
+                200,
+                false,
+                "music_lilac",
+                R.drawable.img_album_exp2,
+                false,
+            )
+        )
+        songDB.songDao().insert(
+            Song(
+                "Flu",
+                "아이유 (IU)",
+                0,
+                200,
+                false,
+                "music_flu",
+                R.drawable.img_album_exp2,
+                false,
+            )
+        )
+        songDB.songDao().insert(
+            Song(
+                "Next Level",
+                "에스파 (AESPA)",
+                0,
+                210,
+                false,
+                "music_next_level",
+                R.drawable.img_album_exp3,
+                false,
+            )
+        )
+        songDB.songDao().insert(
+            Song(
+                "Boy with Luv",
+                "방탄소년단 (BTS)",
+                0,
+                230,
+                false,
+                "music_boy_with_luv",
+                R.drawable.img_album_exp4,
+                false,
+            )
+        )
+        songDB.songDao().insert(
+            Song(
+                "BBoom BBoom",
+                "모모랜드 (MOMOLAND)",
+                0,
+                240,
+                false,
+                "music_bboom",
+                R.drawable.img_album_exp5,
+                false,
+            )
+        )
+        val _songs = songDB.songDao().getSongs()
+        Log.d("DB data",_songs.toString())
     }
 
     override fun onStart() { //onCreate가 아닌 onStart부터 하는 이유는 엑티비티가 전환이 될 때 onStart부터 시작되기 때문이다.
