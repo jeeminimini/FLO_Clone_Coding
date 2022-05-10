@@ -10,32 +10,34 @@ import com.example.flo.databinding.FragmentSavedSongBinding
 
 class SavedSongFragment : Fragment() {
     lateinit var binding: FragmentSavedSongBinding
-    private var albumDatas = ArrayList<Album>()
+    lateinit var songDB : SongDatabase
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSavedSongBinding.inflate(inflater,container,false)
 
-        albumDatas.apply {
-            add(Album("Butter","방탄소년단 (BTS)",R.drawable.img_album_exp))
-            add(Album("Lilac","아이유 (IU)",R.drawable.img_album_exp2))
-            add(Album("Next Level","에스파 (AESPA)",R.drawable.img_album_exp))
-            add(Album("Boy with Luv","방탄소년단 (BTS)",R.drawable.img_album_exp))
-            add(Album("BBoom BBoom","모모랜드 (MOMOLAND)",R.drawable.img_album_exp))
-            add(Album("Weekend","태연 (Tae Yeon)",R.drawable.img_album_exp))
-
-        }
-
-        val SavedSongRVAdapter= SavedSongRVAdapter(albumDatas)
-        binding.savedSongMusicRv.adapter=SavedSongRVAdapter
-        binding.savedSongMusicRv.layoutManager=LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
-
-        SavedSongRVAdapter.setMyItemClickListener(object: SavedSongRVAdapter.MyItemClickListener{
-            override fun onRemoveAlbum(position: Int) {
-                SavedSongRVAdapter.removeItem(position)
-            }
-
-        })
+        songDB = SongDatabase.getInstance(requireContext())!!
 
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initRecyclerView()
+    }
+
+    private fun initRecyclerView(){
+        binding.savedSongMusicRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+        val songRVAdapter = SavedSongRVAdapter()
+
+        songRVAdapter.setMyItemClickListener(object : SavedSongRVAdapter.MyItemClickListener{
+            override fun onRemoveSong(songId: Int) {
+                songDB.songDao().updateIsLikeById(false,songId)
+            }
+        })
+
+        binding.savedSongMusicRv.adapter = songRVAdapter
+
+        songRVAdapter.addSongs(songDB.songDao().getLikedSongs(true) as ArrayList<Song>)
     }
 }

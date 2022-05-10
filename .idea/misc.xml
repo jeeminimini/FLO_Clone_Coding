@@ -13,7 +13,15 @@
         <entry key="..\:/Users/jungwoo/AndroidStudioProjects/FLO/app/src/main/res/layout/fragment_search.xml" value="0.1" />
         <entry key="..\:/Users/jungwoo/AndroidStudioProjects/FLO/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
         <entry key="..\:/Users/tydragon65/AndroidStudioProjects/Kotlin/udemy_android_template_bottomnavi-main/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/Users/tydragon65/AndroidStudioProjects/Kotlin/udemy_android_template_bottomnavi-main/app/src/main/res/layout/activity_song.xml" value="0.17572463768115942" />
+        <entry key="..\:/Users/tydragon65/AndroidStudioProjects/Kotlin/udemy_android_template_bottomnavi-main/app/src/main/res/layout/activity_song.xml" value="0.15789473684210525" />
+        <entry key="..\:/Users/tydragon65/AndroidStudioProjects/Kotlin/udemy_android_template_bottomnavi-main/app/src/main/res/layout/fragment_album.xml" value="0.1263924592973436" />
+        <entry key="..\:/Users/tydragon65/AndroidStudioProjects/Kotlin/udemy_android_template_bottomnavi-main/app/src/main/res/layout/fragment_locker.xml" value="0.1263924592973436" />
+        <entry key="..\:/Users/tydragon65/AndroidStudioProjects/Kotlin/udemy_android_template_bottomnavi-main/app/src/main/res/layout/fragment_look.xml" value="0.1263924592973436" />
+        <entry key="..\:/Users/tydragon65/AndroidStudioProjects/Kotlin/udemy_android_template_bottomnavi-main/app/src/main/res/layout/fragment_music_file.xml" value="0.1263924592973436" />
+        <entry key="..\:/Users/tydragon65/AndroidStudioProjects/Kotlin/udemy_android_template_bottomnavi-main/app/src/main/res/layout/fragment_saved_song.xml" value="0.1" />
+        <entry key="..\:/Users/tydragon65/AndroidStudioProjects/Kotlin/udemy_android_template_bottomnavi-main/app/src/main/res/layout/fragment_song.xml" value="0.1" />
+        <entry key="..\:/Users/tydragon65/AndroidStudioProjects/Kotlin/udemy_android_template_bottomnavi-main/app/src/main/res/layout/item_album.xml" value="0.1263924592973436" />
+        <entry key="..\:/Users/tydragon65/AndroidStudioProjects/Kotlin/udemy_android_template_bottomnavi-main/app/src/main/res/layout/item_saved_song.xml" value="0.1263924592973436" />
       </map>
     </option>
   </component>

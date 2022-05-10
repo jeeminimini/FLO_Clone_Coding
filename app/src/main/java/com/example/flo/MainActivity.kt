@@ -34,17 +34,23 @@ class MainActivity : AppCompatActivity() {
 
         binding.mainPlayerCl.setOnClickListener {
             //startActivity(Intent(this,SongActivity::class.java))
-            val intent = Intent(this,SongActivity::class.java)
-            intent.putExtra("title",song.title)
-            intent.putExtra("singer",song.singer)
-            intent.putExtra("second",song.second)
-            intent.putExtra("playTime",song.playTime)
-            intent.putExtra("isPlaying",song.isPlaying)
-            intent.putExtra("music",song.music)
+//            val intent = Intent(this,SongActivity::class.java)
+//            intent.putExtra("title",song.title)
+//            intent.putExtra("singer",song.singer)
+//            intent.putExtra("second",song.second)
+//            intent.putExtra("playTime",song.playTime)
+//            intent.putExtra("isPlaying",song.isPlaying)
+//            intent.putExtra("music",song.music)
+//             --> roomDB 쓰면서 밑에껄로 씀.
+         val editor = getSharedPreferences("song", MODE_PRIVATE).edit()
+         editor.putInt("songId",song.id)
+         editor.apply()
+
+         val intent = Intent(this,SongActivity::class.java)
             startActivity(intent)
         }
 
-        inputDummySongs()
+        inputDummySongs() //<-이것 사용하면 오류남
         initBottomNavigation()
 
 
@@ -192,15 +198,26 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() { //onCreate가 아닌 onStart부터 하는 이유는 엑티비티가 전환이 될 때 onStart부터 시작되기 때문이다.
         //onResume에서 해도 되지만, onStart에서 ui와 관련한 코드를 초기화하는게 더 안정적이다.
         super.onStart()
-        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
-        val songJson = sharedPreferences.getString("songData",null)
+//        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
+//        val songJson = sharedPreferences.getString("songData",null)
+//
+//        song = if(songJson==null){
+//            Song("라일락","아이유(IU)",0,60,false,"music_lilac")
+//        }else{
+//            gson.fromJson(songJson,Song::class.java)
+//        }
+        val spf = getSharedPreferences("song",MODE_PRIVATE)
+        val songId = spf.getInt("songId",0)
 
-        song = if(songJson==null){
-            Song("라일락","아이유(IU)",0,60,false,"music_lilac")
+        val songDB = SongDatabase.getInstance(this)!!
+
+        song = if(songId == 0){
+            songDB.songDao().getSong(1)
         }else{
-            gson.fromJson(songJson,Song::class.java)
+            songDB.songDao().getSong(songId)
         }
 
+        Log.d("song ID",song.id.toString())
         setMiniPlayer(song)
 
     }
