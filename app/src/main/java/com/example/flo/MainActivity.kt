@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        Log.d("Song",song.title + song.singer)
+        Log.d("Main/JWT_TO_SERVER",getJwt().toString())
     }
 
     fun setPlayerStatus(isPlaying: Boolean){
@@ -246,6 +246,12 @@ class MainActivity : AppCompatActivity() {
 
         val _songs = songDB.songDao().getSongs()
         Log.d("DB data",_songs.toString())
+    }
+
+    private fun getJwt():String?{
+        val spf = this.getSharedPreferences("auth",AppCompatActivity.MODE_PRIVATE) //appcompat은 fragment에서 사용하는 방식이다
+        return spf!!.getString("jwt","") //sharedpreferences에 값이 없으면 0을 반환(이건 Int였을 때)
+
     }
 
     override fun onStart() { //onCreate가 아닌 onStart부터 하는 이유는 엑티비티가 전환이 될 때 onStart부터 시작되기 때문이다.
